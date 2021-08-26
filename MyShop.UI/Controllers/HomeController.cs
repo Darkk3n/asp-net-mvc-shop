@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using MyShop.Core.Contracts;
+using MyShop.Core.Extensions;
 using MyShop.Core.Models;
 using MyShop.Core.ViewModels;
 
@@ -19,7 +20,7 @@ namespace MyShop.UI.Controllers
 
 		public ActionResult Index(string category = "") {
 			var products = new List<Product>();
-			if (!string.IsNullOrEmpty(category)) {
+			if (!category.HasValue()) {
 				products.AddRange(context.Collection().Where(r => r.Category == category).ToList());
 			}
 			else {
