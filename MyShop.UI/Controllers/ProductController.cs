@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using MyShop.Core.Contracts;
 using MyShop.Core.Models;
@@ -26,9 +28,13 @@ namespace MyShop.UI.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Create(ProductManagerViewModel prod) {
+		public ActionResult Create(ProductManagerViewModel prod, HttpPostedFileBase file) {
 			if (!ModelState.IsValid)
 				return View(prod);
+			if (file != null) {
+				prod.Product.Image = $"{prod.Product.Id}{Path.GetExtension(file.FileName)}";
+				file.SaveAs(Server.MapPath($"~//Content//ProductImages//{prod.Product.Image}"));
+			}
 			context.Insert(prod.Product);
 			context.Commit();
 			return RedirectToAction("Index");
@@ -46,15 +52,20 @@ namespace MyShop.UI.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Edit(ProductManagerViewModel prod, string id) {
+		public ActionResult Edit(ProductManagerViewModel prod, string id, HttpPostedFileBase file) {
 			var editedProd = context.Find(id);
 			if (editedProd == null)
 				return HttpNotFound();
+
 			if (!ModelState.IsValid)
 				return View(editedProd);
+
+			if (file != null) {
+				editedProd.Image = $"{prod.Product.Id}{Path.GetExtension(file.FileName)}";
+				file.SaveAs(Server.MapPath($"~//Content//ProductImages//{prod.Product.Image}"));
+			}
 			editedProd.Name = prod.Product.Name;
 			editedProd.Category = prod.Product.Category;
-			editedProd.Image = prod.Product.Image;
 			editedProd.Price = prod.Product.Price;
 			editedProd.Name = prod.Product.Name;
 			context.Commit();
