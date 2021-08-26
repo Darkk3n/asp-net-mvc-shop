@@ -20,7 +20,7 @@ namespace MyShop.UI.Controllers
 
 		public ActionResult Index(string category = "") {
 			var products = new List<Product>();
-			if (!category.HasValue()) {
+			if (category.HasValue()) {
 				products.AddRange(context.Collection().Where(r => r.Category == category).ToList());
 			}
 			else {

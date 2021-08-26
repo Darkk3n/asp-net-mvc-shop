@@ -77,7 +77,7 @@ namespace MyShop.Services
 		public void RemoveFromBasket(HttpContextBase httpContext, string itemId) {
 			var basket = GetBasket(httpContext, true);
 			var item = basket.BasketItems.FirstOrDefault(r => r.Id == itemId);
-			if (item == null) {
+			if (item != null) {
 				basket.BasketItems.Remove(item);
 				basketRepository.Commit();
 			}
@@ -107,10 +107,10 @@ namespace MyShop.Services
 		public BasketSummaryViewModel GetBasketSummary(HttpContextBase httpContext) {
 			var basket = GetBasket(httpContext, false);
 			var model = new BasketSummaryViewModel(0, 0);
-			if (basket == null) {
-				model.BasketCount = basket.BasketItems
+			if (basket != null) {
+				int? count = basket.BasketItems
 					.Sum(r => r.Quantity);
-				model.BasketTotal = basket.BasketItems
+				decimal? total = basket.BasketItems
 					.Join(productRepository.Collection(),
 						b => b.ProductId,
 						p => p.Id,
@@ -118,6 +118,8 @@ namespace MyShop.Services
 							Total = b.Quantity * p.Price
 						})
 					.Sum(r => r.Total);
+				model.BasketCount = count ?? 0;
+				model.BasketTotal = total ?? 0;
 			}
 
 			return model;
