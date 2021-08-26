@@ -62,12 +62,13 @@ namespace MyShop.UI.Controllers
 
 			if (file != null) {
 				editedProd.Image = $"{prod.Product.Id}{Path.GetExtension(file.FileName)}";
-				file.SaveAs(Server.MapPath($"~//Content//ProductImages//{prod.Product.Image}"));
+				file.SaveAs(Server.MapPath($"~//Content//ProductImages//{editedProd.Image}"));
 			}
 			editedProd.Name = prod.Product.Name;
 			editedProd.Category = prod.Product.Category;
 			editedProd.Price = prod.Product.Price;
 			editedProd.Name = prod.Product.Name;
+			editedProd.Description = prod.Product.Description;
 			context.Commit();
 			return RedirectToAction("Index");
 		}
