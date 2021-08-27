@@ -23,6 +23,7 @@ namespace MyShop.Core.Models
 
 		public string State { get; set; }
 
+		[DisplayName("Order Status")]
 		public string OrderStatus { get; set; }
 
 		public virtual ICollection<OrderItem> OrderItems { get; set; }

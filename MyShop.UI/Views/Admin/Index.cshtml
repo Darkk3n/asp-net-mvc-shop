@@ -1,0 +1,19 @@
+﻿@{
+	ViewBag.Title = "Administration";
+}
+
+<h2>Admin Pages</h2>
+
+<div class="col-md-6">
+	<h4>Product Management</h4>
+	<div class="list-group">
+		@Html.ActionLink("Product Categories", "Index", "ProductCategory", null, new { @class = "btn btn-default" })
+		@Html.ActionLink("Products", "Index", "Product", null, new { @class = "btn btn-default" })
+	</div>
+</div>
+<div class="col-md-6">
+	<h4>Order Management</h4>
+	<div class="list-group">
+		@Html.ActionLink("Orders", "Index", "OrderManagement", null, new { @class = "btn btn-default" })
+	</div>
+</div>

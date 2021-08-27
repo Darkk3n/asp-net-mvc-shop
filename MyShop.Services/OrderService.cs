@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MyShop.Core.Contracts;
 using MyShop.Core.Models;
 using MyShop.Core.ViewModels;
@@ -27,5 +28,15 @@ namespace MyShop.Services
 			orderRepo.Insert(baseOrder);
 			orderRepo.Commit();
 		}
+
+		public IEnumerable<Order> GetOrders() => orderRepo.Collection();
+
+		public Order GetOrder(string id) => orderRepo.Collection().FirstOrDefault(r => r.Id == id);
+
+		public void UpdateOrder(Order order) {
+			orderRepo.Update(order);
+			orderRepo.Commit();
+		}
+
 	}
 }
