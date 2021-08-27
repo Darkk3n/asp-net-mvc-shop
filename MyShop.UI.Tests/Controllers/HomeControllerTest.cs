@@ -1,54 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyShop.UI;
+using MyShop.Core.Contracts;
+using MyShop.Core.Models;
+using MyShop.Core.ViewModels;
 using MyShop.UI.Controllers;
+using MyShop.UI.Tests.Mocks;
 
 namespace MyShop.UI.Tests.Controllers
 {
 	[TestClass]
 	public class HomeControllerTest
 	{
-		[TestMethod]
-		public void Index()
-		{
-			// Arrange
-			HomeController controller = new HomeController();
+		IRepository<Product> productContext;
+		IRepository<ProductCategory> categoryContext;
 
-			// Act
-			ViewResult result = controller.Index() as ViewResult;
+		[TestInitialize]
+		public void Init() {
+			productContext = new MockContext<Product>();
+			categoryContext = new MockContext<ProductCategory>();
 
-			// Assert
-			Assert.IsNotNull(result);
+			productContext.Insert(new Product());
 		}
 
 		[TestMethod]
-		public void About()
-		{
+		public void IndexPageDoesReturnProducts() {
 			// Arrange
-			HomeController controller = new HomeController();
+			var controller = new HomeController(productContext, categoryContext);
 
 			// Act
-			ViewResult result = controller.About() as ViewResult;
-
-			// Assert
-			Assert.AreEqual("Your application description page.", result.ViewBag.Message);
-		}
-
-		[TestMethod]
-		public void Contact()
-		{
-			// Arrange
-			HomeController controller = new HomeController();
-
-			// Act
-			ViewResult result = controller.Contact() as ViewResult;
-
+			var result = controller.Index() as ViewResult;
+			var viewModel = (ProductListViewModel)result.ViewData.Model;
 			// Assert
 			Assert.IsNotNull(result);
+			Assert.IsNotNull(viewModel);
+			Assert.AreEqual(1, viewModel.Products.Count());
 		}
 	}
 }
